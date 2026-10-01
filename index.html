@@ -1,66 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KitCycle 2.0 | We Don't Sell Kits, We Build Systems</title>
-<style>
-body{font-family:Arial, sans-serif; margin:0; background:#f0fdf4; color:#14532d;}
-.header{background:white; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px #0001;}
-.logo{font-size:28px; font-weight:bold; color:#15803d;}
-.hero{background:#dcfce7; padding:50px 30px; text-align:center;}
-.hero h1{font-size:42px; margin:10px 0;}
-.hero p{font-size:18px; color:#166534;}
-.btn{background:#15803d; color:white; padding:12px 25px; border-radius:30px; text-decoration:none; display:inline-block; margin:10px; font-weight:bold;}
-.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; padding:30px;}
-.card{background:white; border-radius:15px; padding:20px; box-shadow:0 4px 15px #0001; text-align:center; border-top:4px solid #22c55e;}
-.badge{background:#dcfce7; color:#15803d; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:bold;}
-.wallet{background:linear-gradient(135deg,#15803d,#22c55e); color:white; padding:30px; border-radius:20px; margin:30px; text-align:center;}
-.footer{background:#052e16; color:white; padding:30px; text-align:center; margin-top:30px;}
-</style>
+  <title>KitCycle 2.0 - Live</title>
+  <style>
+    body{font-family:Arial; text-align:center; padding:30px; background:#f0fff0}
+   .card{background:white; padding:20px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1); max-width:400px; margin:auto}
+    input{padding:10px; width:70%; border-radius:8px; border:1px solid #ccc}
+    button{padding:10px 20px; background:green; color:white; border:none; border-radius:8px; margin-top:10px}
+  </style>
 </head>
 <body>
+  <h1>♻️ KitCycle 2.0</h1>
+  <div class="card">
+    <h3>Scan QR Code</h3>
+    <input id="qrInput" placeholder="Ex: KIT-001-2024" value="KIT-001-2024">
+    <br>
+    <button onclick="checkKit()">Check Kit</button>
+    <div id="result" style="margin-top:20px; text-align:left;"></div>
+  </div>
 
-<div class="header">
-<div class="logo">♻️ KitCycle 2.0</div>
-<div>College Official Circular Economy Platform</div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<div class="hero">
-<span class="badge">Sustainable • QR Verified • College-Built</span>
-<h1>We Don't Sell Kits,<br>We Build Systems</h1>
-<p>Transforming lab waste into reusable kits. Earn Eco-Coins, track impact, and build NAAC Green Points.</p>
-<a class="btn" href="#kits">Explore QR Verified Kits →</a>
-<a class="btn" style="background:white; color:#15803d; border:2px solid #15803d;" href="#impact">View Impact Dashboard</a>
-<p style="margin-top:20px;"><b>✅ 500+ Kits Rebuilt | 💰 12,450 Eco-Coins Earned | 🏆 87 NAAC Points</b></p>
-</div>
+const firebaseConfig = {
+  apiKey: "AIzaSyD_wOKnhv1F0uszgj9aNGhDd8x_HgsVnvw",
+  authDomain: "kitcycle-2-0.firebaseapp.com",
+  projectId: "kitcycle-2-0",
+  storageBucket: "kitcycle-2-0.firebasestorage.app",
+  messagingSenderId: "363327763111",
+  appId: "1:363327763111:web:2ecc9c9373349d94cc2182"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-<div id="kits" class="grid">
-<div class="card"><span class="badge">QR VERIFIED ✅</span><h3>Arduino Starter Kit v2.0</h3><p>Parts: 22 • Health: 96%</p><p><b>Eco-Coins: 150</b></p><a class="btn" href="#">Buy with Eco-Coins</a></div>
-<div class="card"><span class="badge">QR VERIFIED ✅</span><h3>Microscope Slide Kit</h3><p>Parts: 35 • Health: 85%</p><p><b>Eco-Coins: 90</b></p><a class="btn" href="#">Buy with Eco-Coins</a></div>
-<div class="card"><span class="badge">QR VERIFIED ✅</span><h3>ECE Lab Kit v3.1</h3><p>Parts: 18 • Health: 92%</p><p><b>Eco-Coins: 120</b></p><a class="btn" href="#">Buy with Eco-Coins</a></div>
-</div>
+window.checkKit = async function(){
+  const qr = document.getElementById("qrInput").value.trim();
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "Searching Firebase...";
 
-<div class="wallet">
-<h2>💰 Eco-Coins Wallet - 1,240 Coins</h2>
-<p>Earned this month: +320 | Redeemed: 80 | Rank: #12 in College</p>
-<p>Redeem in Canteen, Library Xerox, Fest Pass</p>
-</div>
+  const q = query(collection(db,"kits"), where("qrCode","==",qr));
+  const snap = await getDocs(q);
 
-<div id="impact" style="padding:30px; background:white; margin:20px; border-radius:15px;">
-<h2 style="text-align:center;">🏆 NAAC Green Points Counter: 87/100</h2>
-<p>✅ Waste Reduction: +32 pts</p>
-<p>✅ Reuse Rate: +28 pts</p>
-<p>✅ Student Engagement: +27 pts</p>
-<p style="text-align:center; color:#15803d; font-weight:bold;">Target for NAAC A+ Certification: 90/100 - On Track!</p>
-</div>
-
-<div class="footer">
-<h2>KitCycle 2.0</h2>
-<p>Building sustainable systems for next generation of campus innovators.</p>
-<p>Team: Pragna & Team | College Project 2024-25</p>
-<p>© 2024 KitCycle 2.0 - Developed by College Sustainability Cell</p>
-</div>
-
+  if(snap.empty){
+    resultDiv.innerHTML = "<p style='color:red'>❌ Kit not found!</p>";
+  } else {
+    const kit = snap.docs[0].data();
+    resultDiv.innerHTML = `
+      <p style='color:green'><b>✅ Kit Found!</b></p>
+      <p><b>Name:</b> ${kit.kitName}</p>
+      <p><b>Health:</b> ${kit.health}%</p>
+      <p><b>EcoCoins:</b> ${kit.ecoCoins}</p>
+      <p><b>Status:</b> ${kit.status}</p>
+    `;
+  }
+}
+</script>
 </body>
 </html>
